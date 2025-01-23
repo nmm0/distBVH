@@ -81,8 +81,8 @@ namespace bvh
     {
       m_num_elements += _num_elements;
       m_data.insert( m_data.end(),
-                    static_cast< unsigned char * >( _data ),
-                    static_cast< unsigned char * >( _data ) + _num_elements * m_stride );
+                    static_cast< std::byte * >( _data ),
+                    static_cast< std::byte * >( _data ) + _num_elements * m_stride );
     }
 
     void set_data( void *_data, std::size_t _num_elements )
@@ -95,7 +95,7 @@ namespace bvh
     void *allocate( std::size_t _n )
     {
       m_num_elements += _n;
-      auto iter = m_data.insert( m_data.end(), _n * m_stride, 0x00 );
+      auto iter = m_data.insert( m_data.end(), _n * m_stride, static_cast< std::byte >( 0x00 ) );
       return &( *iter );
     }
 
@@ -117,12 +117,12 @@ namespace bvh
     }
 
     std::size_t stride() const noexcept { return m_stride; }
-    const std::vector< unsigned char > &byte_buffer() const noexcept { return m_data; }
+    const std::vector< std::byte > &byte_buffer() const noexcept { return m_data; }
     std::size_t size() const noexcept { return m_num_elements; }
 
   private:
 
-    std::vector< unsigned char > m_data;
+    std::vector< std::byte > m_data;
     std::size_t m_stride;
     std::size_t m_num_elements;
   };
